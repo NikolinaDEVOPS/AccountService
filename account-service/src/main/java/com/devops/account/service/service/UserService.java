@@ -1,5 +1,7 @@
 package com.devops.account.service.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -25,7 +27,52 @@ public class UserService {
 		return userRepository.findById(id).get();
 	}
 
-	public ResponseVO getUserWithPost(Integer userId) {
+	public List<User> findByIsPublic() {
+		return userRepository.findByIsPublicTrue();
+	}
+
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username).get();
+	}
+	
+	public Boolean follow(String username, String usernameToFollow) {
+		User user = userRepository
+				.findByUsername(username).get();
+		User userToFollow = this.findByUsername(usernameToFollow);
+		
+		if (userToFollow.getIsPublic() == false) {
+			userToFollow.getFollowRequests().add(user);
+			userRepository.save(userToFollow);
+			userRepository.save(user);
+			return false;
+		}
+		
+		user.getFollowing().add(userToFollow);
+		userToFollow.getFollowers().add(user);
+		
+		userRepository.save(userToFollow);
+		userRepository.save(user);
+		return true;
+	}
+	
+	public void accept(String username, String usernameToAccept){
+		User user = userRepository.findByUsername(username).get();
+		
+		User userToAccept = userRepository.findByUsername(usernameToAccept).get();
+		
+		userToAccept.getFollowing().add(user);
+		
+		for (int i = 0; i < user.getFollowRequests().size(); i++) {
+			if (user.getFollowRequests().get(i).getUsername().equals(userToAccept.getUsername())) {
+				user.getFollowRequests().remove(i);
+				break;
+			}
+		}
+		user.getFollowers().add(userToAccept);
+		userRepository.save(userToAccept);
+		userRepository.save(user);
+	}
+	/*public ResponseVO getUserWithPost(Integer userId) {
 		ResponseVO vo = new ResponseVO();
 		User user = userRepository.findById(userId).get();
 		Post post =
@@ -36,5 +83,5 @@ public class UserService {
 		vo.setUser(user);
 		vo.setPost(post);
 		return vo;
-	}
+	}*/
 }
