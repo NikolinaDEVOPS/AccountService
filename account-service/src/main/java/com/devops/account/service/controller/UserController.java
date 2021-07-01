@@ -71,9 +71,13 @@ public class UserController {
 		return userService.save(user);
 	}
 	
-	@GetMapping("/{id}")
-	public User findOne(@PathVariable Integer id) {
-	    return userService.findById(id);
+	@PutMapping("/{username}/setPublic")
+	public User setIsPublic(@PathVariable String username) {
+		User user = userService.findByUsername(username);
+		
+		if(user == null) return null;
+		user.setIsPublic(true);
+		return userService.save(user);
 	}
 	
 	@PutMapping("/{username}/setPrivate")
