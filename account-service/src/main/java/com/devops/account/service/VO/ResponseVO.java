@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResponseVO {
 	private User user;
-	private Post post;
+	private Post[] posts;
 }
