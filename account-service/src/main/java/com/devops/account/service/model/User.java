@@ -17,7 +17,14 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer userId;
-	private String username;
-	
-	private Long postId;
+	public String username;
+
+	public String name;
+	public String surname;
+	public String phoneNumber;
+	public String sex;
+	public String birthDate;
+	public String website;
+	public String biography;
+	public Boolean isPublic;
 }
