@@ -84,4 +84,17 @@ public class UserService {
 		vo.setPost(post);
 		return vo;
 	}*/
+
+	public ResponseVO getPostsFromUser(String username) {
+		ResponseVO vo = new ResponseVO();
+		User user = userRepository.findByUsername(username).get();
+		Post[] posts =
+				restTemplate.getForObject(
+				"http://POST-SERVICE/post/" + username
+				, Post[].class);
+		
+		vo.setUser(user);
+		vo.setPosts(posts);
+		return vo;
+	}
 }

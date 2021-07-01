@@ -99,8 +99,8 @@ public class UserController {
 		userService.accept(username, userToFollow);
 	}
 	
-	/*@GetMapping("/{id}/post")
-	public ResponseVO getUserWithost(@PathVariable Integer id) {
-		return userService.getUserWithPost(id);
-	}*/
+	@GetMapping("/{username}/posts")
+	public ResponseVO getPostsFromUser(@PathVariable String username) {
+		return userService.getPostsFromUser(username);
+	}
 }
