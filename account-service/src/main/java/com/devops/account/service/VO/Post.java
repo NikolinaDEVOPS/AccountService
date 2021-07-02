@@ -14,5 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Post {
 	private Integer postId;
-	private String name;
+	private String description;
+	private String username;
+	private String picture;
 }

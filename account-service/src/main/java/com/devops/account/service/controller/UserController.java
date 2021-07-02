@@ -1,5 +1,6 @@
 package com.devops.account.service.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devops.account.service.DTO.UserDTO;
+import com.devops.account.service.VO.Post;
 import com.devops.account.service.VO.ResponseVO;
 import com.devops.account.service.model.User;
 import com.devops.account.service.service.UserService;
@@ -102,5 +104,18 @@ public class UserController {
 	@GetMapping("/{username}/posts")
 	public ResponseVO getPostsFromUser(@PathVariable String username) {
 		return userService.getPostsFromUser(username);
+	}
+	
+	@PostMapping("/{username}/favorites/{postId}")
+	public void favorites(@PathVariable String username, @PathVariable Integer postId) {
+		userService.favorites(username, postId);
+	}
+	
+	@GetMapping("/{username}/favorites")
+	public List<Post> getFavorites(@PathVariable String username) {
+		User user = userService.findByUsername(username);
+		
+		if(user == null) return null;
+		return userService.getFavorites(username);
 	}
 }

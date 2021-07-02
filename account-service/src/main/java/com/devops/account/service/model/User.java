@@ -3,6 +3,8 @@ package com.devops.account.service.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,6 +37,10 @@ public class User {
 	public String biography;
 	public Boolean isPublic;
 	
+	@Column(name="favorites")
+	@ElementCollection(targetClass=Integer.class)
+	private List<Integer> favorites;
+	
 	@OneToMany
 	public List<User> following;
 	@OneToMany
@@ -53,7 +59,8 @@ public class User {
 		this.isPublic = userDTO.getIsPublic();
 		this.following = new ArrayList<User>();
 		this.followRequests = new ArrayList<User>();
-		followers = new ArrayList<User>();
+		this.followers = new ArrayList<User>();
+		this.favorites = new ArrayList<Integer>();
 	}
 	
 	public void setUserData(UserDTO userDTO) {

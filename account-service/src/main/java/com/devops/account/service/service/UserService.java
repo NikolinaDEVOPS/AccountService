@@ -1,5 +1,6 @@
 package com.devops.account.service.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,18 +73,6 @@ public class UserService {
 		userRepository.save(userToAccept);
 		userRepository.save(user);
 	}
-	/*public ResponseVO getUserWithPost(Integer userId) {
-		ResponseVO vo = new ResponseVO();
-		User user = userRepository.findById(userId).get();
-		Post post =
-				restTemplate.getForObject(
-						"http://POST-SERVICE/post/" + user.getPostId()
-						, Post.class);
-		
-		vo.setUser(user);
-		vo.setPost(post);
-		return vo;
-	}*/
 
 	public ResponseVO getPostsFromUser(String username) {
 		ResponseVO vo = new ResponseVO();
@@ -96,5 +85,31 @@ public class UserService {
 		vo.setUser(user);
 		vo.setPosts(posts);
 		return vo;
+	}
+	
+	public User favorites(String username, Integer postId) {
+		User user = userRepository.findByUsername(username).get();
+		
+		if (user.getFavorites().contains(postId)) {
+			return user;
+		}
+		
+		user.getFavorites().add(postId);
+		return userRepository.save(user);
+	}
+
+	public List<Post> getFavorites(String username) {
+		ResponseVO vo = new ResponseVO();
+		User user = userRepository.findByUsername(username).get();
+		List<Post> posts = new ArrayList<Post>();
+		Post post = null;
+		for(int i = 0; i < user.getFavorites().size(); i++) {
+			post =
+					restTemplate.getForObject(
+					"http://POST-SERVICE/post/id/" + user.getFavorites().get(i)
+					, Post.class);
+			posts.add(post);
+		}
+		return posts;
 	}
 }
